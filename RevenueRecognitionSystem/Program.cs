@@ -2,6 +2,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using RevenueRecognitionSystem;
+using RevenueRecognitionSystem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 //adding scoped
 builder.Services.AddControllers();
 //builder.Services.AddScoped<IDbService, DbService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 
 builder.Services.AddDbContext<AppDbContext>(options => 
