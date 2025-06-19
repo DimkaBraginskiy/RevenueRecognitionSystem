@@ -1,7 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using RevenueRecognitionSystem.DTOs;
 using RevenueRecognitionSystem.DTOs.Response;
 using RevenueRecognitionSystem.Exceptions;
@@ -13,11 +17,14 @@ public class AuthService : IAuthService
 {
     
     private readonly AppDbContext _dbContext;
+    private readonly IConfiguration _configuration;
     
-    public AuthService(AppDbContext dbContext)
+    public AuthService(AppDbContext dbContext, IConfiguration configuration)
     {
         _dbContext = dbContext;
+        _configuration = configuration;
     }
+    
     
     public async Task RegisterEmployeeAsync(CancellationToken token, RegisterEmployeeDto dto)
     {
@@ -73,6 +80,8 @@ public class AuthService : IAuthService
         string refreshToken = Guid.NewGuid().ToString();
         employee.RefreshToken = refreshToken;
         employee.RefreshTokenExp = DateTime.UtcNow.AddDays(10); // 10 days)
+        
+        string jwtToken = GenerateJwtToken(employee);
 
         await _dbContext.SaveChangesAsync(token);
 
@@ -80,8 +89,33 @@ public class AuthService : IAuthService
         {
             Login = employee.Login,
             Role = employee.Role,
-            RefreshToken = refreshToken
+            RefreshToken = refreshToken,
+            JwtToken = jwtToken
         };
+    }
+    
+    
+    private string GenerateJwtToken(Employee employee)
+    {
+        var jwtConfig = _configuration.GetSection("Jwt");
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]!));
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.Name, employee.Login),
+            new Claim(ClaimTypes.Role, employee.Role)
+        };
+
+        var token = new JwtSecurityToken(
+            issuer: jwtConfig["Issuer"],
+            audience: jwtConfig["Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddDays(double.Parse(jwtConfig["ExpireDays"]!)),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
     
     
