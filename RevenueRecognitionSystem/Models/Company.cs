@@ -3,7 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RevenueRecognitionSystem.Models;
 
-[Table("Company")]
 public class Company : Client
 {
     [Required]

@@ -18,4 +18,6 @@ public class Software
     public string CurrentVersion { get; set; } = null!;
     [Required]
     public string Category { get; set; } = null!;
+    
+    
 }
