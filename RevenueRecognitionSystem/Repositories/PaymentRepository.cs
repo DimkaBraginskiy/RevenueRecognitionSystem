@@ -3,7 +3,7 @@ using RevenueRecognitionSystem.Models;
 
 namespace RevenueRecognitionSystem.Repositories;
 
-public class PaymentRepository
+public class PaymentRepository : IPaymentRepository
 {
     private readonly AppDbContext _context;
     

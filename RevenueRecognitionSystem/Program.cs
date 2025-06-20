@@ -9,6 +9,11 @@ using RevenueRecognitionSystem.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+
 var jwtConfig = builder.Configuration.GetSection("Jwt");
 builder.Services.AddAuthentication(options =>
     {
@@ -65,5 +70,13 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 
 app.Run();

@@ -2,7 +2,7 @@
 
 namespace RevenueRecognitionSystem.Repositories;
 
-public class SoftwareRepository
+public class SoftwareRepository : ISoftwareRepository
 {
     private readonly AppDbContext _context;
     

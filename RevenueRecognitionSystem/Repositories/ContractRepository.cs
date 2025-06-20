@@ -3,7 +3,7 @@ using RevenueRecognitionSystem.Models;
 
 namespace RevenueRecognitionSystem.Repositories;
 
-public class ContractRepository
+public class ContractRepository : IContractRepository
 {
     private readonly AppDbContext _context;
     

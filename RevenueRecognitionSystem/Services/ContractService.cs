@@ -8,13 +8,18 @@ namespace RevenueRecognitionSystem.Services;
 
 public class ContractService : IContractService
 {
-    private readonly ContractRepository _contractRepository;
-    private readonly ClientsRepository _clientsRepository;
-    private readonly SoftwareRepository _softwareRepository;
-    private readonly DiscountRepository _discountRepository;
-    private readonly PaymentRepository _paymentRepository;
+    private readonly IContractRepository _contractRepository;
+    private readonly IClientRepository _clientsRepository;
+    private readonly ISoftwareRepository _softwareRepository;
+    private readonly IDiscountRepository _discountRepository;
+    private readonly IPaymentRepository _paymentRepository;
 
-    public ContractService(ContractRepository contractRepository, ClientsRepository clientsRepository, SoftwareRepository softwareRepository, DiscountRepository discountRepository, PaymentRepository paymentRepository)
+    public ContractService(
+        IContractRepository contractRepository,
+        IClientRepository clientsRepository,
+        ISoftwareRepository softwareRepository,
+        IDiscountRepository discountRepository,
+        IPaymentRepository paymentRepository)
     {
         _contractRepository = contractRepository;
         _clientsRepository = clientsRepository;
