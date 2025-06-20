@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using RevenueRecognitionSystem.Exceptions;
 using RevenueRecognitionSystem.Models;
 
@@ -58,8 +59,23 @@ public class ClientsRepository
         {
             throw new NotFoundException($"Client with id {id} not found.");
         }
-        
-        _context.Clients.Remove(client);
-        await _context.SaveChangesAsync(token);
+
+        if (client is Individual individual)
+        {
+            individual.FirstName = "[deleted]";
+            individual.LastName = "[deleted]";
+            individual.Pesel = "[deleted]";
+            individual.Email = "[deleted]";
+            individual.PhoneNumber = "[deleted]";
+            individual.Address = "[deleted]";
+            individual.IsDeleted = true;
+    
+            _context.Clients.Update(individual);
+            await _context.SaveChangesAsync(token);
+        }
+        else if (client is Company)
+        {
+            throw new ValidationException("Deleting company clients is not allowed.");
+        }
     }
 }
