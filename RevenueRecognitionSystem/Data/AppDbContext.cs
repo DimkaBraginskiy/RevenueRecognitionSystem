@@ -51,5 +51,29 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Discount>()
             .Property(d => d.Value)
             .HasPrecision(10, 2);
+        
+        modelBuilder.Entity<Software>().HasData(
+            new Software
+            {
+                IdSoftware = 1,
+                Name = "AccountingPro",
+                Description = "Finance software",
+                CurrentVersion = "1.0.0",
+                Category = "Finance",
+                BaseYearlyPrice = 5000m
+            }
+        );
+
+        modelBuilder.Entity<Discount>().HasData(
+            new Discount
+            {
+                IdDiscount = 1,
+                DiscountType = "temporary",
+                Name = "Black Friday",
+                Value = 10,
+                StartDate = new DateTime(2024, 11, 25),
+                EndDate = new DateTime(2024, 12, 5)
+            }
+        );
     }
 }

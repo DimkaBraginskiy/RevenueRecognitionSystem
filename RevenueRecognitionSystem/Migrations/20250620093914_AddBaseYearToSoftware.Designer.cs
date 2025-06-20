@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RevenueRecognitionSystem;
 
@@ -11,9 +12,11 @@ using RevenueRecognitionSystem;
 namespace RevenueRecognitionSystem.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250620093914_AddBaseYearToSoftware")]
+    partial class AddBaseYearToSoftware
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,17 +136,6 @@ namespace RevenueRecognitionSystem.Migrations
                     b.HasKey("IdDiscount");
 
                     b.ToTable("Discount");
-
-                    b.HasData(
-                        new
-                        {
-                            IdDiscount = 1,
-                            DiscountType = "temporary",
-                            EndDate = new DateTime(2024, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Black Friday",
-                            StartDate = new DateTime(2024, 11, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Value = 10m
-                        });
                 });
 
             modelBuilder.Entity("RevenueRecognitionSystem.Models.Employee", b =>
@@ -236,17 +228,6 @@ namespace RevenueRecognitionSystem.Migrations
                     b.HasKey("IdSoftware");
 
                     b.ToTable("Software");
-
-                    b.HasData(
-                        new
-                        {
-                            IdSoftware = 1,
-                            BaseYearlyPrice = 5000m,
-                            Category = "Finance",
-                            CurrentVersion = "1.0.0",
-                            Description = "Finance software",
-                            Name = "AccountingPro"
-                        });
                 });
 
             modelBuilder.Entity("RevenueRecognitionSystem.Models.Company", b =>

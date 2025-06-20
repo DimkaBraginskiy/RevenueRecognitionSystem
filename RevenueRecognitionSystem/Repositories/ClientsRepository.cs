@@ -5,7 +5,7 @@ using RevenueRecognitionSystem.Models;
 
 namespace RevenueRecognitionSystem.Repositories;
 
-public class ClientsRepository
+public class ClientsRepository : IClientRepository
 {
     private readonly AppDbContext _context;
     

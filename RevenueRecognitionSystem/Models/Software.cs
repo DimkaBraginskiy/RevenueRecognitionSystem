@@ -19,5 +19,7 @@ public class Software
     [Required]
     public string Category { get; set; } = null!;
     
-    
+    [Required]
+    [Column(TypeName = "decimal(10,2)")]
+    public decimal BaseYearlyPrice { get; set; }
 }

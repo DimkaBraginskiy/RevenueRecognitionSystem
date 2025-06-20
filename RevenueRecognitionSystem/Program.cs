@@ -38,7 +38,12 @@ builder.Services.AddControllers();
 //builder.Services.AddScoped<IDbService, DbService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IClientsService, ClientsService>();
+builder.Services.AddScoped<IContractService, ContractService>();
 builder.Services.AddScoped<ClientsRepository>();
+builder.Services.AddScoped<ContractRepository>();
+builder.Services.AddScoped<DiscountRepository>();
+builder.Services.AddScoped<SoftwareRepository>();
+
 
 
 
