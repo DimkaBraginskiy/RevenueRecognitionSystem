@@ -12,13 +12,15 @@ public class ContractService : IContractService
     private readonly ClientsRepository _clientsRepository;
     private readonly SoftwareRepository _softwareRepository;
     private readonly DiscountRepository _discountRepository;
+    private readonly PaymentRepository _paymentRepository;
 
-    public ContractService(ContractRepository contractRepository, ClientsRepository clientsRepository, SoftwareRepository softwareRepository, DiscountRepository discountRepository)
+    public ContractService(ContractRepository contractRepository, ClientsRepository clientsRepository, SoftwareRepository softwareRepository, DiscountRepository discountRepository, PaymentRepository paymentRepository)
     {
         _contractRepository = contractRepository;
         _clientsRepository = clientsRepository;
         _softwareRepository = softwareRepository;
         _discountRepository = discountRepository;
+        _paymentRepository = paymentRepository;
     }
 
     public async Task CreateContractAsync(CancellationToken token, ContractRequestDto dto)
@@ -72,6 +74,45 @@ public class ContractService : IContractService
         CreatedAt = DateTime.UtcNow,
     };
 
-    await _contractRepository.AddContractAsync(token, contract);
+        await _contractRepository.AddContractAsync(token, contract);
+    }
+    
+    
+    
+    
+    public async Task PayForContractAsync(PaymentRequestDto dto, CancellationToken token)
+    {
+        var contract = await _contractRepository.GetContractByIdAsync(dto.ContractId, token)
+                       ?? throw new NotFoundException($"Contract with ID {dto.ContractId} not found");
+
+        if (contract.IsCancelled)
+            throw new ValidationException("Contract is cancelled");
+
+        if (contract.IsSigned)
+            throw new ValidationException("Contract already paid and signed");
+
+        if (DateTime.UtcNow > contract.EndDate)
+            throw new ValidationException("Cannot pay after contract expiration");
+
+        var totalPaid = await _paymentRepository.GetTotalPaidForContractAsync(dto.ContractId, token);
+        var newTotal = totalPaid + dto.Amount;
+
+        if (newTotal > contract.TotalPrice)
+            throw new ValidationException($"Payment exceeds contract price. Already paid: {totalPaid}.");
+
+        var payment = new Payment
+        {
+            IdContract = dto.ContractId,
+            Amount = dto.Amount,
+            PaymentDate = DateTime.UtcNow
+        };
+
+        await _paymentRepository.AddPaymentAsync(payment, token);
+
+        if (newTotal == contract.TotalPrice)
+        {
+            contract.IsSigned = true;
+            await _contractRepository.UpdateContractAsync(contract, token);
+        }
     }
 }

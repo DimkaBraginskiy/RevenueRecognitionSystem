@@ -28,5 +28,16 @@ public class ContractRepository
         _context.Contracts.Add(contract);
         await _context.SaveChangesAsync(token);
     }
+    
+    public async Task<Contract?> GetContractByIdAsync(int id, CancellationToken token)
+    {
+        return await _context.Contracts.FindAsync(new object[] { id }, token);
+    }
+
+    public async Task UpdateContractAsync(Contract contract, CancellationToken token)
+    {
+        _context.Contracts.Update(contract);
+        await _context.SaveChangesAsync(token);
+    }
 
 }

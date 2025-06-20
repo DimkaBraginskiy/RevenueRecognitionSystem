@@ -38,4 +38,24 @@ public class ContractsController : ControllerBase
             return NotFound(new { error = ex.Message });
         }
     }
+    
+    
+    [HttpPost("payments")]
+    [Authorize]
+    public async Task<IActionResult> PayForContract([FromBody] PaymentRequestDto dto, CancellationToken token)
+    {
+        try
+        {
+            await _contractService.PayForContractAsync(dto, token);
+            return Ok(new { message = "Payment processed." });
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(new { error = ex.Message });
+        }
+        catch (NotFoundException ex)
+        {
+            return NotFound(new { error = ex.Message });
+        }
+    }
 }

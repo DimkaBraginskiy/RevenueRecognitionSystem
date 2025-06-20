@@ -43,6 +43,7 @@ builder.Services.AddScoped<ClientsRepository>();
 builder.Services.AddScoped<ContractRepository>();
 builder.Services.AddScoped<DiscountRepository>();
 builder.Services.AddScoped<SoftwareRepository>();
+builder.Services.AddScoped<PaymentRepository>();
 
 
 
