@@ -5,6 +5,7 @@ using RevenueRecognitionSystem.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using RevenueRecognitionSystem.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 //builder.Services.AddScoped<IDbService, DbService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IClientsService, ClientsService>();
+builder.Services.AddScoped<ClientsRepository>();
+
 
 
 builder.Services.AddDbContext<AppDbContext>(options => 
