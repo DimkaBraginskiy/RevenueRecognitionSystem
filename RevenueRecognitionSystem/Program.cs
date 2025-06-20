@@ -39,11 +39,15 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IClientsService, ClientsService>();
 builder.Services.AddScoped<IContractService, ContractService>();
+builder.Services.AddHttpClient<ICurrencyExchangeService, CurrencyExchangeService>();
+builder.Services.AddScoped<IRevenueService, RevenueService>();
+
 builder.Services.AddScoped<ClientsRepository>();
 builder.Services.AddScoped<ContractRepository>();
 builder.Services.AddScoped<DiscountRepository>();
 builder.Services.AddScoped<SoftwareRepository>();
 builder.Services.AddScoped<PaymentRepository>();
+
 
 
 

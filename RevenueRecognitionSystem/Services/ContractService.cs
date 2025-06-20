@@ -95,6 +95,11 @@ public class ContractService : IContractService
             throw new ValidationException("Cannot pay after contract expiration");
 
         var totalPaid = await _paymentRepository.GetTotalPaidForContractAsync(dto.ContractId, token);
+    
+        // Re-check to ensure no payments happen after full payment was reached
+        if (totalPaid >= contract.TotalPrice)
+            throw new ValidationException("Contract is already fully paid.");
+
         var newTotal = totalPaid + dto.Amount;
 
         if (newTotal > contract.TotalPrice)
@@ -109,7 +114,9 @@ public class ContractService : IContractService
 
         await _paymentRepository.AddPaymentAsync(payment, token);
 
-        if (newTotal == contract.TotalPrice)
+        // Re-query total after save in case of concurrency
+        var updatedTotal = await _paymentRepository.GetTotalPaidForContractAsync(dto.ContractId, token);
+        if (updatedTotal == contract.TotalPrice)
         {
             contract.IsSigned = true;
             await _contractRepository.UpdateContractAsync(contract, token);

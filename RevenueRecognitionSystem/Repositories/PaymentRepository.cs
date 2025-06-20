@@ -15,7 +15,7 @@ public class PaymentRepository
     public async Task<decimal> GetTotalPaidForContractAsync(int contractId, CancellationToken token)
     {
         return await _context.Payments
-            .Where(p => p.Id == contractId)
+            .Where(p => p.IdContract == contractId)
             .SumAsync(p => p.Amount, token);
     }
     
@@ -24,4 +24,13 @@ public class PaymentRepository
         _context.Payments.Add(payment);
         await _context.SaveChangesAsync(token);
     }
+    
+    public async Task<decimal> GetTotalConfirmedRevenueAsync(CancellationToken token)
+    {
+        return await _context.Payments
+            .Where(p => p.Contract.IsSigned && !p.Contract.IsCancelled)
+            .SumAsync(p => p.Amount, token);
+    }
+
+   
 }

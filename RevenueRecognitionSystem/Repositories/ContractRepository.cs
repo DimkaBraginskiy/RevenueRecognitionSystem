@@ -39,5 +39,12 @@ public class ContractRepository
         _context.Contracts.Update(contract);
         await _context.SaveChangesAsync(token);
     }
+    
+    public async Task<decimal> GetUnsignedContractsTotalValueAsync(CancellationToken token)
+    {
+        return await _context.Contracts
+            .Where(c => !c.IsSigned && !c.IsCancelled)
+            .SumAsync(c => c.TotalPrice, token);
+    }
 
 }
