@@ -4,11 +4,11 @@ namespace RevenueRecognitionSystem.Services;
 
 public class RevenueService : IRevenueService
 {
-    private readonly PaymentRepository _paymentRepository;
-    private readonly ContractRepository _contractRepository;
+    private readonly IPaymentRepository _paymentRepository;
+    private readonly IContractRepository _contractRepository;
     private readonly ICurrencyExchangeService _currencyService;
 
-    public RevenueService(PaymentRepository paymentRepository, ContractRepository contractRepository, ICurrencyExchangeService currencyService)
+    public RevenueService(IPaymentRepository paymentRepository, IContractRepository contractRepository, ICurrencyExchangeService currencyService)
     {
         _paymentRepository = paymentRepository;
         _contractRepository = contractRepository;

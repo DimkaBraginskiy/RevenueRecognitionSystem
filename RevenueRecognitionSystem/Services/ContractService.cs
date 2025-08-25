@@ -30,6 +30,7 @@ public class ContractService : IContractService
 
     public async Task CreateContractAsync(CancellationToken token, ContractRequestDto dto)
     {
+        
         if (dto.StartDate >= dto.EndDate)
         throw new ValidationException("End date must be after start date.");
 

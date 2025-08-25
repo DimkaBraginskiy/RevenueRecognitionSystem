@@ -9,9 +9,9 @@ namespace RevenueRecognitionSystem.Services;
 
 public class ClientsService : IClientsService
 {
-    private readonly ClientsRepository _clientsRepository;
+    private readonly IClientRepository _clientsRepository;
     
-    public ClientsService(ClientsRepository clientsRepository)
+    public ClientsService(IClientRepository clientsRepository)
     {
         _clientsRepository = clientsRepository;
     }
